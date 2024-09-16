@@ -13,14 +13,67 @@ path = paste0(getwd(),'/data/')
 #Note: bases administratives 2023 : https://drees.solidarites-sante.gouv.fr/communique-de-presse-jeux-de-donnees/240725_Data_Base_SAE_2023
 #mais prendre les bases statistiques pour faire des statistiques et des études
 
-#bordereau ID
-file2 = paste0(path,'ID_2023.csv') 
-SAE = read.csv(file2, 
-               sep = ";")%>%
-  mutate(TEL="")
+na0 = function(a){
+  return(ifelse(is.na(a),0,a))
+}
 #bordereau FILTRE
+#bordereau ID
 #bordereau DIALYSE
 #bordereaux Q20-21-22-23-24 probablement également utiles
+#bordereau TELEMED
 
 
 # identification dans le bordereau filtre des établissements réalisant une activité exclusive de dialyse
+file = paste0(path,'FILTRE_2022r.csv') 
+queDialyses = read.csv(file, 
+               sep = ";")%>%
+  filter(IRC==1)%>%
+  filter(STATUT=="DECLA")%>%
+  mutate(autres = na0(HEB_MED) + 
+           na0(HEB_CHIR)+
+                 na0(HEB_PERINAT)+
+                       na0(HEB_PSY)+
+                             na0(HEB_SSR)+
+                                   na0(HEB_SLD)+
+                                         na0(MED)+
+                                               na0(CHIRAMBU)+
+                                                     na0(PSY)+
+           na0(RTH)+
+                 na0(CHIMIO)+
+                       na0(IVGAMP)+
+                             na0(CPP)+
+                                   na0(HAD)+
+                                         na0(SSR)+
+                                               na0(URG)+
+                                                     na0(SMURSAMU))%>%
+  filter(autres==0)
+
+#bordereau ID
+ID = read.csv("data/ID_2022r.csv", 
+              sep = ";")
+queDialyses_ID = queDialyses%>%
+  select(AN,FI,RS,FI_EJ)%>%
+  left_join(ID%>%rename(FI=fi), by = join_by(FI))
+
+
+#bordereau DIALYSE (sans personnel)
+#pour bien comprendre voir AE 2022 Bases statistiques - formats SAS-CSV\Documentation\...
+#...SAE2022_Dictionnaire des variables par bordereaux.xlsx
+Dialyse = read.csv("data/DIALYSE_2022r.csv", 
+              sep = ";")
+queDialyses_ID_DIAL = queDialyses_ID%>%
+  left_join(Dialyse, by = join_by(FI))
+
+
+#bordereau DIALYSE (avec personnel)
+#pour bien comprendre voir AE 2022 Bases statistiques - formats SAS-CSV\Documentation\...
+#...SAE2022_Dictionnaire des variables par bordereaux.xlsx
+Dialyse_P = read.csv("data/DIALYSE_P_2022r.csv", 
+                     sep = ";") 
+queDialyses_ID_DIALP = queDialyses_ID%>%
+  left_join(Dialyse_P, by = join_by(FI))
+
+
+#bordereaux Q20-21-22-23-24 probablement également utiles
+#bordereau TELEMED
+#(...)
