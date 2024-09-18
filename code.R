@@ -74,6 +74,17 @@ queDialyses_ID_DIALP = queDialyses_ID%>%
   left_join(Dialyse_P, by = join_by(FI))
 
 
-#bordereaux Q20-21-22-23-24 probablement également utiles
-#bordereau TELEMED
-#(...)
+#bordereaux Q21-23
+Q21 = read.csv("data/Q21_2022r.csv", 
+               sep = ";") 
+queDialyses_Q21 = queDialyses_ID%>%
+  left_join(Q21, by = join_by(FI))
+
+Q23 = read.csv("data/Q23_2022r.csv", 
+               sep = ";") 
+queDialyses_Q23 = queDialyses_ID%>%
+  left_join(Q23, by = join_by(FI))
+
+
+
+
