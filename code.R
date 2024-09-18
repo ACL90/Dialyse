@@ -55,6 +55,9 @@ queDialyses_ID = queDialyses%>%
   select(AN,FI,RS,FI_EJ)%>%
   left_join(ID%>%rename(FI=fi), by = join_by(FI))
 
+write.xlsx(queDialyses_ID,file='output/queDialyses_ID.xlsx')
+
+
 
 #bordereau DIALYSE (sans personnel)
 #pour bien comprendre voir AE 2022 Bases statistiques - formats SAS-CSV\Documentation\...
@@ -63,6 +66,9 @@ Dialyse = read.csv("data/DIALYSE_2022r.csv",
               sep = ";")
 queDialyses_ID_DIAL = queDialyses_ID%>%
   left_join(Dialyse, by = join_by(FI))
+
+write.xlsx(queDialyses_ID_DIAL,file='output/queDialyses_ID_DIAL.xlsx')
+
 
 
 #bordereau DIALYSE (avec personnel)
@@ -73,18 +79,24 @@ Dialyse_P = read.csv("data/DIALYSE_P_2022r.csv",
 queDialyses_ID_DIALP = queDialyses_ID%>%
   left_join(Dialyse_P, by = join_by(FI))
 
+write.xlsx(queDialyses_ID_DIALP,file='output/queDialyses_ID_DIALP.xlsx')
+
 
 #bordereaux Q21-23
 Q21 = read.csv("data/Q21_2022r.csv", 
                sep = ";") 
-queDialyses_Q21 = queDialyses_ID%>%
+queDialyses_ID_Q21 = queDialyses_ID%>%
   left_join(Q21, by = join_by(FI))
+
+write.xlsx(queDialyses_ID_Q21,file='output/queDialyses_ID_Q21.xlsx')
+
+
 
 Q23 = read.csv("data/Q23_2022r.csv", 
                sep = ";") 
-queDialyses_Q23 = queDialyses_ID%>%
+queDialyses_ID_Q23 = queDialyses_ID%>%
   left_join(Q23, by = join_by(FI))
 
-
+write.xlsx(queDialyses_ID_Q23,file='output/queDialyses_ID_Q23.xlsx')
 
 
